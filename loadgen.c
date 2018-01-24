@@ -217,7 +217,7 @@ int main(int argc, char** argv)
 	}
 
 	if(argc < 5) {
-		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)>\n"
+		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)> [-r]\n"
 			"file: the path of the target file\n"
 			"num_bytes: the size of each IO request\n"
 			"num_io: the number of IO requests\n"

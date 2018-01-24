@@ -8,7 +8,6 @@
 #include <sys/wait.h>
 
 #define SEQUENCE_SIZE  (sizeof(int)*2)
-//#define DEBUG
 
 static char* TOGGLE_PATH = "/sys/kernel/debug/tracing/tracing_on";
 
@@ -187,7 +186,7 @@ int main(int argc, char** argv)
 	}
 
 	if(argc != 5) {
-		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)>\n"
+		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)> [-DDEBUG=1]\n"
 			"file: the path of the target file\n"
 			"num_bytes: the size of each IO request\n"
 			"num_io: the number of IO requests\n"

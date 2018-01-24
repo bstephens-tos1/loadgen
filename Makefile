@@ -1,2 +1,9 @@
+CC = gcc
+FLAGS = -std=c99
+
 all:
-	gcc -std=c99 -o loadgen loadgen.c
+	$(CC) $(FLAGS) -o loadgen loadgen.c
+debug:
+	$(CC) $(FLAGS) -o loadgen loadgen.c -DDEBUG
+clean:
+	rm -f *.o loadgen

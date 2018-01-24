@@ -71,8 +71,7 @@ int writeSequences(char* fileName, int bytes, int writes, int delay, int trace_t
 	int deadbeef = 0xDEADBEEF;
 
 	// Writes DEADBEEF into the buffer over and over after the sequence num,
-
-	// Writes DEADBEEF into the buffer over and over after the sequence num,
+	// so that our buffer is not completely filled with 0's.
 	for(int i = sizeof(int); i < bytes - sizeof(int); i += sizeof(int)) {
 		*(unsigned int*)(buff + i) = deadbeef;
 	}

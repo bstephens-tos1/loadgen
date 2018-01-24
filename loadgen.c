@@ -148,6 +148,14 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 
 		int count = read(infile_fd, buff, bytes);
 
+		if(!stopTrace(trace_toggle_fd)) {
+			printf("Failure toggling after write to %s \n", TOGGLE_PATH);
+			ret = 1;
+			break;
+		}
+
+		// Check to see if we read the amount of bytes we wanted to read only
+		// after tracing has been turned off.
 		if(count != bytes) {
 			printf("Wanted %d bytes, got %d.\n", bytes, count);
 		}

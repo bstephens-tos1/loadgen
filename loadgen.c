@@ -6,6 +6,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #define SEQUENCE_SIZE  (sizeof(int)*2)
 
@@ -185,12 +186,13 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	if(argc != 5) {
+	if(argc < 5) {
 		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)> [-DDEBUG=1]\n"
 			"file: the path of the target file\n"
 			"num_bytes: the size of each IO request\n"
 			"num_io: the number of IO requests\n"
 			"delay: the sleeping time between IO requests. 0 means no sleep.\n"
+			"-r: perform reads instead of writes"
 			"SEQUENCE_SIZE=%lu\n", argv[0], SEQUENCE_SIZE
 			);
 		return 1;
@@ -201,12 +203,20 @@ int main(int argc, char** argv)
 	int num_io = atoi(argv[3]);
 	int delay = atoi(argv[4]);
 
+	int option = 0;
+	int READ = 0;
+	if((option = getopt(argc, argv, "r")) != -1) {
+		READ = 1;
+	}
+
 	if (bytes <= SEQUENCE_SIZE || bytes % sizeof(int) != 0 || num_io <= 0 || delay < 0) {
-		printf("Bytes must not exceed and be a multiple of %lu, num_io must be 1 or greater,"
+		printf("Bytes must exceed and be a multiple of %lu, num_io must be 1 or greater,"
 				"and delay cannot be negative.\n", SEQUENCE_SIZE);
 		return 1;
 	}
 
+	if(READ) {
+		return readSequences(fileName, bytes, num_io, delay, trace_toggle_fd);
+	}
 	return writeSequences(fileName, bytes, num_io, delay, trace_toggle_fd);
-	return readSequences(fileName, bytes, num_io, delay, trace_toggle_fd);
 }

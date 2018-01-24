@@ -217,11 +217,11 @@ int main(int argc, char** argv)
 	}
 
 	if(argc < 5) {
-		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)> [-DDEBUG=1]\n"
+		printf("Usage: %s <file> <num_bytes> <num_io> <delay(us)>\n"
 			"file: the path of the target file\n"
 			"num_bytes: the size of each IO request\n"
 			"num_io: the number of IO requests\n"
-			"delay: the sleeping time between IO requests. 0 means no sleep.\n"
+			"delay: usleep between I/O requests\n"
 			"-r: perform reads instead of writes"
 			"SEQUENCE_SIZE=%lu\n", argv[0], SEQUENCE_SIZE
 			);

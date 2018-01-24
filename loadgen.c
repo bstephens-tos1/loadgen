@@ -6,7 +6,11 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <unistd.h>
+
+#include <time.h>
+#include <stdlib.h>
 
 #define SEQUENCE_SIZE  (sizeof(int)*2)
 
@@ -121,6 +125,15 @@ int writeSequences(char* fileName, int bytes, int writes, int delay, int trace_t
 	return ret;
 }
 
+off_t fsize(const char *filename) {
+	struct stat st;
+
+	if (stat(filename, &st) == 0)
+		return st.st_size;
+
+	return -1;
+}
+
 int readSequences(char* fileName, int bytes, int reads, int delay, int trace_toggle_fd)
 {
 	int infile_fd;
@@ -136,6 +149,14 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 		perror("malloc()\n");
 		return 0;
 	}
+
+	int FILE_SIZE = fsize(fileName);
+
+	// Cannot allow the offset to exceed the amount of bytes we will read
+	srand(time(NULL));
+	int offset = rand() % FILE_SIZE;
+
+	lseek(infile_fd, offset, SEEK_SET);
 
 	int ret = 0;
 
@@ -160,12 +181,15 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 			printf("Wanted %d bytes, got %d.\n", bytes, count);
 		}
 
+		offset = rand() % FILE_SIZE;
+		lseek(infile_fd, offset, SEEK_SET);
+
 		// If there should be a delay, it must be done before the next read()
 		if (delay > 0) {
 			usleep(delay);
 		}
 	}
-	
+
 	close(infile_fd);
 	close(trace_toggle_fd);
 	free(buff);

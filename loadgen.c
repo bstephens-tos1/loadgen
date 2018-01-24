@@ -125,7 +125,7 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 {
 	int infile_fd;
 
-	if((infile_fd = open(fileName, O_RDONLY) < 0)) {
+	if((infile_fd = open(fileName, O_RDONLY)) < 0) {
 		perror(fileName);
 		return 1;
 	}
@@ -146,12 +146,10 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 			break;
 		}
 
-		read(infile_fd, buff, bytes);
+		int count = read(infile_fd, buff, bytes);
 
-		if(!stopTrace(trace_toggle_fd)) {
-			printf("Failure toggling after write to %s \n", TOGGLE_PATH);
-			ret = 1;
-			break;
+		if(count != bytes) {
+			printf("Wanted %d bytes, got %d.\n", bytes, count);
 		}
 
 		// If there should be a delay, it must be done before the next read()
@@ -159,7 +157,7 @@ int readSequences(char* fileName, int bytes, int reads, int delay, int trace_tog
 			usleep(delay);
 		}
 	}
-
+	
 	close(infile_fd);
 	close(trace_toggle_fd);
 	free(buff);

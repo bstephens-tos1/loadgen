@@ -222,7 +222,7 @@ int main(int argc, char** argv)
 			"num_bytes: the size of each IO request\n"
 			"num_io: the number of IO requests\n"
 			"delay: usleep between I/O requests\n"
-			"-r: perform reads instead of writes"
+			"-r: perform reads instead of writes\n"
 			"SEQUENCE_SIZE=%lu\n", argv[0], SEQUENCE_SIZE
 			);
 		return 1;
